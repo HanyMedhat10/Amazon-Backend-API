@@ -1,27 +1,22 @@
-version: '3.7'
+# Use root/example as user/password credentials
+version: '3.1'
+
 services:
-  mongodb:
-    image: mongo:latest
+
+  mongo:
+    image: mongo
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-    ports:
-      - 27017:27017
-    volumes:
-      - mongodb_data_container:/data/db
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pass
 
   mongo-express:
-    image: mongo-express:latest
+    image: mongo-express
     restart: always
     ports:
-      - 8085:8081
+      - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
-      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@mongodb:27017/
-
-volumes:
-  mongodb_data_container:
-
-
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
+      ME_CONFIG_MONGODB_URL: mongodb://root:pass@mongo:27017/
+      ME_CONFIG_BASICAUTH: false

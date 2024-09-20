@@ -3,15 +3,23 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "start:debug": "node --inspect index.js",
+    "start:dev": "node --watch index.js"
   },
   "author": "Hany Medhat",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "config": "^3.3.12",
+    "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "http": "^0.0.1-security",
-    "mongoose": "^8.6.3",
+    "mongod": "^2.0.0",
+    "mongoose": "^8.6.3"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.6"
   }
 }
