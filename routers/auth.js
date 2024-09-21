@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 router.get("/", (req, res) => {
     res.send("Hello Auth Model");
 });
@@ -31,22 +32,27 @@ router.post("/signup", async (req, res) => {
     }
 })
 
-router.post("/login", (req, res) => {
-    const {email,password} = req.body;
-    let user = User.findOne({email});
-    if (!user) {
-        return res
-        .status(422)
-        .json({ error: "Invalid Email or Password" });
+router.post("/signin", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        
+        let user =await User.findOne({email});
+        if (!user) {
+            return res
+            .status(422)
+            .json({ error: "Invalid Email or Password" });
+        }
+        const isMatch = bcrypt.compare(password, user.password)
+        if (!isMatch) {
+            return res
+            .status(422)
+            .json({ error: "Invalid Email or Password" });
+        }
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        return res.json({ token, ...user._doc });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
     }
-    const isMatch = bcrypt.compare(password, user.password)
-    if (!isMatch) {
-        return res
-        .status(422)
-        .json({ error: "Invalid Email or Password" });
-    }
-    // ??? I want add a token and send it to the user
-    res.json({ message: "Login Successful" });
     
 })
 
