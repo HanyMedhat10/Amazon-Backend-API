@@ -12,7 +12,7 @@ app.get(startup, (req, res) => {
 });
 
 mongoose
-  .connect(process.env.URL)
+  .connect(process.env.DB_URL) /* connect with Atlas aws */
   .then(() => {
     console.log("Connected to MongoDB");
   })

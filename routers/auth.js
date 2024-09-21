@@ -5,7 +5,7 @@ router.get("/", (req, res) => {
     res.send("Hello Auth Model");
 });
 router.post("/signup", (req, res) => {
-    const {name,email,password} = req.body;
+    const { name, email, password } = req.body;
     
 })
 
