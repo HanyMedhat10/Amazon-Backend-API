@@ -26,4 +26,43 @@ router.post("/add-product", admin, async (req, res) => {
   }
 });
 
+// get all products
+router.get("/get-products",admin,async (req, res) => {
+  try {
+    const products = await Product.find();
+    return res.json({ products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+// get products by ID
+router.get("/get-product/:id", admin, async (req, res) => {
+  try {
+    const id = req.params.id;
+console.log(id);
+    const product = await Product.findOne({ _id: id });
+    return res.json({ product });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({error: error.message});
+  }
+});
+
+// delete products by ID
+router.delete("delete-product/:id", admin, async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Product.deleteOne({ _id: id });
+    req.json(`Product ${id} is delete`);
+  } catch (error) {
+    
+  }
+
+
+ }
+
+);
+
 module.exports = router;

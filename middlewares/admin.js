@@ -34,7 +34,9 @@ const admin = async (req, res, next) => {
       return res
         .status(401)
         .send("You are not authorized to access this resource");
-    }
+      }
+    req.user = user;
+    req.token = user.token;
     next();
   });
 };
