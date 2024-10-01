@@ -5,10 +5,12 @@ require("dotenv").config();
 
 const authRouter = require("./routers/auth");
 const adminRouter = require("./routers/admin");
+const productRouter = require("./routers/product");
 const startup = "/api";
 app.use(express.json());
 app.use(`${startup}/auth`, authRouter);
 app.use(`${startup}/admin`, adminRouter);
+app.use(`${startup}/product`, productRouter);
 // app.use(express.static())
 app.get(startup, (req, res) => {
   res.send("Hello world");

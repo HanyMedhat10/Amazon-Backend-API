@@ -27,10 +27,10 @@ router.post("/add-product", admin, async (req, res) => {
 });
 
 // get all products
-router.get("/get-products",admin,async (req, res) => {
+router.get("/get-products", admin, async (req, res) => {
   try {
     const products = await Product.find();
-    return res.json({ products });
+    return res.json(products);
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: error.message });
@@ -41,28 +41,24 @@ router.get("/get-products",admin,async (req, res) => {
 router.get("/get-product/:id", admin, async (req, res) => {
   try {
     const id = req.params.id;
-console.log(id);
     const product = await Product.findOne({ _id: id });
-    return res.json({ product });
+    return res.json(product);
   } catch (error) {
     console.error(error);
-    res.status(500).send({error: error.message});
+    res.status(500).send({ error: error.message });
   }
 });
 
 // delete products by ID
-router.delete("delete-product/:id", admin, async (req, res) => {
+router.delete("/delete-product/:id", admin, async (req, res) => {
   try {
     const id = req.params.id;
-    await Product.deleteOne({ _id: id });
-    req.json(`Product ${id} is delete`);
+    const product = await Product.findByIdAndDelete({ _id: id });
+    return res.json(product);
   } catch (error) {
-    
+    console.error(error);
+    res.status(500).send({ error: error.message });
   }
-
-
- }
-
-);
+});
 
 module.exports = router;
