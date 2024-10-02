@@ -19,7 +19,7 @@ const auth = require("./auth");
           .status(401)
           .send("You are not authorized to access this resource");
     }
-    req.user = decoded.id;
+    req.userId = decoded.id;
     req.token = token;
     next();
   } catch (error) {
@@ -29,7 +29,7 @@ const auth = require("./auth");
 
 const admin = async (req, res, next) => {
     auth(req, res, async () => {
-    const user = await User.findById(req.user);
+    const user = await User.findById(req.userId);
     if (user.type !== "admin") {
       return res
         .status(401)

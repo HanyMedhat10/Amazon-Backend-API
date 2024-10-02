@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middlewares/auth");
 // get user data
 router.get("/", auth, async (req, res) => {
-  const user = await User.findById(req.user);
+  const user = await User.findById(req.userId);
   res.json({ ...user._doc, token: req.token });
 });
 router.post("/signup", async (req, res) => {
@@ -71,9 +71,9 @@ router.post("/tokenIsValid:", async (req, res) => {
 });
 
 // Get user Profile
-router.get("/profile", async (req, res) => {
+router.get("/profile",auth ,async (req, res) => {
   try {
-    const user = await User.findById(req.user);
+    const user = await User.findById(req.userId);
     res.json({ ...user._doc, token: req.token });
   } catch (error) {
     res.status(500).json({ error: error.message });
