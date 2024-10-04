@@ -33,7 +33,7 @@ router.post("/rate-product", auth, async (req, res) => {
   try {
     const { productId, rating } = req.body;
     const userId = req.userId;
-    console.log('userId', userId, 'productId', productId, 'rating', rating);
+    console.log("userId", userId, "productId", productId, "rating", rating);
     const product = await Product.findById(productId);
     //??  if user rate the product only one time
     // let alreadyRated = product.ratings.find(
@@ -43,23 +43,57 @@ router.post("/rate-product", auth, async (req, res) => {
     //   return res.status(400).send({ message: "Already rated" });
     // }
     // ??> if user rate the product more than one time and delete the old one
-   for (let index = 0; index < product.ratings.length; index++) {
-     if (product.ratings[index].userId.toString() === userId.toString()) {
-       product.ratings.splice(index, 1);
-       break;
-     }
-   }
+    for (let index = 0; index < product.ratings.length; index++) {
+      if (product.ratings[index].userId.toString() === userId.toString()) {
+        product.ratings.splice(index, 1);
+        break;
+      }
+    }
     const ratingSchema = {
       userId,
-      rating, 
+      rating,
     };
     product.ratings.push(ratingSchema);
     product.rating =
       product.ratings.reduce((acc, val) => val.rating + acc, 0) /
-      product.ratings.length; 
+      product.ratings.length;
     product.numReviews = product.ratings.length;
     await product.save();
     res.status(200).send(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+router.get("/get-product/:id", auth, async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    res.send(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+router.get("/deal-of-day", auth, async (req, res) => {
+  try {
+    const products = await Product.find({});
+    products.sort((a, b) => {
+      // return b.createdAt - a.createdAt;
+      let aSum = 0,
+        bSum = 0;
+      for (let index = 0; index < a.ratings.length; index++) {
+        aSum += a.ratings[index].rating;
+      }
+      for (let index = 0; index < b.ratings.length; index++) {
+        bSum += b.ratings[index].rating;
+      }
+
+      // return bSum - aSum;
+      return bSum > aSum ? 1 : -1;
+    });
+    res.send(products[0]);
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: error.message });
