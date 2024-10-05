@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Product, productSchema } = require("./product");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -9,7 +10,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-      unique: true,
+    unique: true,
     email: true,
     validate: {
       validator: (value) => {
@@ -34,6 +35,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user",
   },
+  cart: [
+    { product: productSchema, quantity: { type: Number, required: true } },
+  ],
+
   // tokens: [{
   //     token: {
   //         type: String,
