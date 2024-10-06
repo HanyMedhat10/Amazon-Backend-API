@@ -7,6 +7,9 @@ router.get("/", auth, async (req, res) => {
   const user = await User.findById(req.userId);
   res.json({ ...user._doc, token: req.token });
 });
+/* It checks if the product is already in the user's cart.
+If it is, it increments the quantity.
+If not, it adds the product to the cart. */
 router.post("/add-to-cart", auth, async (req, res) => {
   try {
     const { id } = req.body;
@@ -26,6 +29,29 @@ router.post("/add-to-cart", auth, async (req, res) => {
     }
     user = await user.save();
     return res.json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+/* remove from cart  quantity = 1 If not, it decrements the cart quantity by 1 */
+router.delete("/remove-from-cart/:id", auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    let user = await User.findById(req.userId);
+    for (let i = 0; i < user.cart.length; i++) {
+      if (user.cart[i].product._id == id) {
+        if (user.cart[i].quantity == 1) {
+          user.cart.splice(i, 1);
+          break;
+        } else {
+          user.cart[i].quantity -= 1;
+          break;
+        }
+      }
+    }
+    user = await user.save();
+    res.json(user);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
