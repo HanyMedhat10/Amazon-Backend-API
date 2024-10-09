@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/user");
 const auth = require("../middlewares/auth");
 const { Product } = require("../models/product");
+const Order = require("../models/order");
 router.get("/", auth, async (req, res) => {
   const user = await User.findById(req.userId);
   res.json({ ...user._doc, token: req.token });
@@ -70,6 +71,38 @@ router.post("/save-user-address", auth, async (req, res) => {
   }
 });
 
+// order product
+router.post("/order", auth, async (req, res) => {
+  try {
+    const { cart, totalPrice, address } = req.body;
+    let products = [];
 
+    for (let i = 0; i < cart.length; i++) {
+      let product = await Product.findById(cart[i].product._id);
+      if (product.quantity >= cart[i].quantity) {
+        product.quantity -= cart[i].quantity;
+        product = await product.save();
+        products.push({ product, quantity: cart[i].quantity });
+      } else {
+        return res
+          .status(400)
+          .json({ error: `${product.name} quantity not available` });
+      }
+    }
+    let user = await User.findById(req.userId);
+    user.cart = [];
+    user = await user.save();
+    let order = new Order({
+      products,
+      totalPrice,
+      address,
+      userId: req.userId,
+    });
+    order = await order.save();
+    res.json(order);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;
