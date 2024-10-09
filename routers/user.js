@@ -33,6 +33,7 @@ router.post("/add-to-cart", auth, async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
+
 /* remove from cart  quantity = 1 If not, it decrements the cart quantity by 1 */
 router.delete("/remove-from-cart/:id", auth, async (req, res) => {
   try {
@@ -56,4 +57,19 @@ router.delete("/remove-from-cart/:id", auth, async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
+// save user address
+router.post("/save-user-address", auth, async (req, res) => {
+  try {
+    const { address } = req.body;
+    let user = await User.findById(req.userId);
+    user.address = address;
+    user = await user.save();
+    res.json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+
+
 module.exports = router;
