@@ -105,4 +105,14 @@ router.post("/order", auth, async (req, res) => {
   }
 });
 
+router.get("/me-orders", auth, async (req, res) => {
+  try {
+    const orders = await Order.find({ userId: req.userId });
+    return res.json(orders);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
