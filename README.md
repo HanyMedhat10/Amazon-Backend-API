@@ -55,6 +55,12 @@ Backend API service for Amazon clone application. This service provides the nece
    ```
 
 3. Create a `.env` file with required environment variables
+
+```env
+DB_URL=your_DB_URL
+JWT_SECRET=your_JWT_SECRET
+```
+
 4. Run the development server:
 
    ```bash
@@ -72,6 +78,12 @@ Backend API service for Amazon clone application. This service provides the nece
 
 ```
 /api
+
+Available endpoints:
+/api/auth  - Authentication routes
+/api/admin - Admin management routes
+/api/product - Product management routes
+/api/user - User management routes
 ```
 
 ## Author
@@ -80,4 +92,4 @@ Hany Medhat
 
 ## License
 
-ISC
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
