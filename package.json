@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "amazon-backend-api": "file:",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "config": "^3.3.12",
